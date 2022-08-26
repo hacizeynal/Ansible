@@ -1,0 +1,26 @@
+---
+- name: Install node and NPM
+  hosts: webserver
+  tasks:
+    - name: update apt repo and cache
+      apt: 
+        update_cache: yes
+        force_apt_get: yes
+        cache_valid_time: 3600
+    - name: install nodejs and npm
+      apt:
+        pkg:
+          - nodejs
+          - npm
+- name: Deploy NodeJs Application
+  hosts: webserver
+  tasks:
+    - name: Unpack the nodejs file and copy to the Digital Ocean instance
+      unarchive:
+        src: /Users/zhajili/Desktop/DevOps/Ansible/node-app-master/node-app-master.tar.gz
+        dest: /root/
+        
+      
+  
+
+      
