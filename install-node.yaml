@@ -19,6 +19,10 @@
       unarchive:
         src: /Users/zhajili/Desktop/DevOps/Ansible/node-app-master/node-app-master.tar.gz
         dest: /root/
+    - name: Install Dependencies
+      npm:
+        path: /root/node-app-master
+        
         
       
   
