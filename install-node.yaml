@@ -12,19 +12,30 @@
         pkg:
           - nodejs
           - npm
+- name: Create Linux user per Application
+  hosts: webserver
+  tasks:
+    - name: Create Linux user
+      user:
+        name: user_nodejs
+        comment: User NodeJs
+        group: admin
+
 - name: Deploy NodeJs Application
   hosts: webserver
+  become: True
+  become_user: user_nodejs
   tasks:
     - name: Unpack the nodejs file and copy to the Digital Ocean instance
       unarchive: # this command will do both ,unarchieve and copy to remote
         src: /Users/zhajili/Desktop/DevOps/Ansible/node-app-master/node-app-master.tar.gz
-        dest: /root/
+        dest: /home/user_nodejs
     - name: Install Dependencies
       npm:
-        path: /root/node-app-master
+        path: /home/user_nodejs/node-app-master
     - name: Start the Application
       command:
-        chdir: /root/node-app-master/app
+        chdir: /home/user_nodejs/node-app-master/app
         cmd: node server
       async: 1000
       poll: 0
