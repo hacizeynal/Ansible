@@ -16,15 +16,22 @@
   hosts: webserver
   tasks:
     - name: Unpack the nodejs file and copy to the Digital Ocean instance
-      unarchive:
+      unarchive: # this command will do both ,unarchieve and copy to remote
         src: /Users/zhajili/Desktop/DevOps/Ansible/node-app-master/node-app-master.tar.gz
         dest: /root/
     - name: Install Dependencies
       npm:
         path: /root/node-app-master
-        
-        
-      
+    - name: Start the Application
+      command:
+        chdir: /root/node-app-master/app
+        cmd: node server
+      async: 1000
+      poll: 0
+    - name : Ensure App is running
+      shell: ps aux | grep node # better for shell injection
+      register: app_status
+    - debug: msg={{app_status.stdout_lines}}
   
 
       
