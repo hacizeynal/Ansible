@@ -1,0 +1,66 @@
+---
+- name: Install Python3 and Docker
+  hosts: ec2-server
+  become: yes
+  become_user: root
+  tasks:
+    - name: Install Python3 and Docker
+      vars:
+        ansible_python_interpreter: /usr/bin/python
+      yum:
+        name:
+          - python3
+          - docker
+        update_cache: yes
+        state: present
+
+- name: Install Docker-Compose
+  hosts: ec2-server
+  become: yes
+  become_user: root
+  tasks:
+    - name:
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Linux-{{lookup('pipe', 'uname -m')}}
+        dest: /usr/local/bin/docker-compose
+        mode: +x
+
+- name: Ensure docker deamon is running
+  hosts: ec2-server
+  become: yes
+  become_user: root
+  tasks:
+    - name: Start Docker deamon
+      systemd:
+        name: docker
+        state: started
+- name: Add ec2-user to Docker Group 
+  hosts: ec2-server
+  become: yes
+  become_user: root
+  tasks: 
+    - name: Add ec2-user to docker Group
+      user: 
+        name: ec2-user
+        groups: docker
+        append: yes
+    - name : Reconnect to the ec2-server
+      meta: reset_connection
+- name: Pull Redis Image
+  hosts: ec2-server
+  tasks:
+    - name: Pull Redis Image and Start Container
+      command : docker run redis
+      async: 1000
+      poll: 0
+
+
+      
+
+  
+
+  
+
+      
+      
+    
