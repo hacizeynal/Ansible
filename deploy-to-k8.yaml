@@ -1,0 +1,7 @@
+- name: Create a k8s namespace via Ansible
+  hosts: localhost
+  kubernetes.core.k8s:
+    name: my-application-k8
+    api_version: v1
+    kind: Namespace
+    state: present
