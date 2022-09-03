@@ -1,7 +1,15 @@
-- name: Create a k8s namespace via Ansible
+---
+- name: Manage K8 via Ansible
   hosts: localhost
-  kubernetes.core.k8s:
-    name: my-application-k8
-    api_version: v1
-    kind: Namespace
-    state: present
+  tasks:
+  - name: Create a k8s namespace via Ansible
+    k8s:
+      name: my-application-k8
+      api_version: v1
+      kind: Namespace
+      state: present
+  - name: Deploy Nginx config file
+    k8s:
+      src: /Users/zhajili/Desktop/DevOps/Ansible/web-app.yaml
+      state: present
+      namespace: my-application-k8
